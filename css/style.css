@@ -1,18 +1,139 @@
-
-table, th, td {
-    border-collapse: collapse;
-    color: rgb(255, 255, 255);
-    font-size: 135%;
-    margin: auto;
-    padding: 3rem;
-    text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-td{
-    border: 1px solid black;
+:root {
+  --var--rows: 6;
+  --var--cols: 7;
+  --level-one: translateZ(3rem);
+  --level-two: translateZ(4rem);
+  --level-three: translateZ(5rem);
+  --fw-normal: 400;
+  --fw-bold: 700;
+  --var-font-size: 1.4rem;
 }
 
-td img{
-    padding: 0rem;
-    margin: 0rem;
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-image: url("../wallpaper.jpg");
+}
+
+.neon-wrapper {
+  display: inline-flex;
+  filter: brightness(100%);
+  overflow: hidden;
+}
+
+.gradient {
+  background: linear-gradient(
+    110.8210951619775deg,
+    rgba(129, 204, 207, 1) 5.533854166666667%,
+    rgba(211, 93, 59, 1) 96.67968749999999%
+  );
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  mix-blend-mode: multiply;
+  z-index: 1;
+  opacity: 70%;
+}
+
+.dodge {
+  background: radial-gradient(circle, white, black 55%) center / 15% 15%;
+  position: absolute;
+  top: -200%;
+  left: -200%;
+  right: 0;
+  bottom: 0;
+  mix-blend-mode: color-dodge;
+  animation: dodge-area 3s linear infinite;
+  z-index: 2;
+  opacity: 50%;
+}
+@keyframes dodge-area {
+  to {
+    transform: translate(60%, 60%);
+  }
+}
+
+.scene {
+  background-color: rgba(17, 17, 17, 0.712);
+  width: calc(51px * var(--var--cols));
+  height: calc(55px * var(--var--rows));
+  border: 1px solid black;
+}
+
+.scene button {
+  position: relative;
+  background: rgba(143, 58, 58, 0.884);
+  margin: 5px;
+  border-radius: 20px;
+  z-index: 3;
+}
+
+.card {
+  width: calc(51px * var(--var--cols));
+  height: calc(55px * var(--var--rows));
+}
+
+.card_content {
+  text-align: center;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transition: transform 3s;
+  transform-style: preserve-3d;
+}
+
+.card:hover .card_content {
+  transform: rotateX(0.05turn);
+}
+
+.card_content {
+  transform: rotateX(0.05turn);
+}
+
+.card_front,
+.card_back {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  align-content: center;
+}
+.card_front::before {
+  content: "";
+  position: absolute;
+  --spacer: 0.1em;
+  top: 70px;
+  bottom: var(--spacer);
+  left: var(--spacer);
+  right: var(--spacer);
+  border: 3px solid black;
+  transform: var(--level-two);
+  grid-row: 4;
+}
+
+.card_body {
+  transform: var(--level-one);
+}
+
+.card_back {
+  position: relative;
+  background-color: red;
+  background-size: cover;
+  transform: rotateY(0.5turn);
+  height: 100%;
 }
