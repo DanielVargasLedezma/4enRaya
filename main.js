@@ -1,34 +1,46 @@
+const root = document.documentElement;
+var size = 0;
+var table = [];
+var rowsArray = [];
+var full = [];
+var rows = parseInt(getComputedStyle(root).getPropertyValue("--var--rows"));
+var cols = parseInt(getComputedStyle(root).getPropertyValue("--var--cols"));
+
 let permitted = true;
 let turn = true;
 let difficulty = 0;
 
-const preferencias = document.getElementById('preferencias');
-const juego = document.getElementById('juego');
-const formulario = document.getElementById('formulario');
+const preferencias = document.getElementById("preferencias");
+const juego = document.getElementById("juego");
+const formulario = document.getElementById("formulario");
 
-formulario.addEventListener('submit', (e) => {
+formulario.addEventListener("submit", (e) => {
   e.preventDefault();
 });
 
 const elegirPreferencias = () => {
+  const dificultad = document.getElementById("dificultad").value;
 
-  const dificultad = document.getElementById('dificultad').value;
+  var n_col = document.getElementById("n_col").value;
+  var n_row = document.getElementById("n_row").value;
 
-  var n_col = document.getElementById('n_col').value;
-  var n_row = document.getElementById('n_row').value;
-  
   difficulty = dificultad;
 
-  document.documentElement.style.setProperty('--var--rows', n_row);
-  document.documentElement.style.setProperty('--var--cols', n_col);
+  document.documentElement.style.setProperty("--var--rows", n_row);
+  document.documentElement.style.setProperty("--var--cols", n_col);
 
   juego.style.display = "block";
   preferencias.style.display = "none";
-}
- 
-const botonElegir = document.getElementById('iniciar');
 
-botonElegir.addEventListener('click', elegirPreferencias);
+  rows = parseInt(getComputedStyle(root).getPropertyValue("--var--rows"));
+  cols = parseInt(getComputedStyle(root).getPropertyValue("--var--cols"));
+
+  init();
+};
+
+const botonElegir = document.getElementById("iniciar");
+
+botonElegir.addEventListener("click", elegirPreferencias);
 
 var rem = document.createElement("img");
 rem.src = "rem.png";
@@ -67,13 +79,6 @@ class RowCalculationFuckit {
     var bestIs;
   }
 }
-
-const root = document.documentElement;
-var size = 0;
-var table = [];
-var rowsArray = [];
-var rows = parseInt(getComputedStyle(root).getPropertyValue("--var--rows"));
-var cols = parseInt(getComputedStyle(root).getPropertyValue("--var--cols"));
 
 function init() {
   size = cols * rows;
@@ -140,8 +145,6 @@ function init() {
   }
 }
 
-init();
-
 function play(e) {
   console.clear();
   if (permitted) {
@@ -164,8 +167,6 @@ function play(e) {
   //console.log(pos);
 }
 
-var rRow = cols;
-
 setInterval(function () {
   if (permitted && !turn) {
     if (difficulty == 0) {
@@ -179,29 +180,28 @@ setInterval(function () {
 
   for (let i = 0; i < size; i++) {
     if (table[i].type == 1 || table[i].type == 2) {
-      if (i + rRow < size && table[i + rRow].type == 0) {
-        let tmp = table[i + rRow].img.src;
-        let tmp2 = table[i + rRow].type;
-        table[i + rRow].img.src = table[i].img.src;
-        table[i + rRow].type = table[i].type;
+      if (i + cols < size && table[i + cols].type == 0) {
+        let tmp = table[i + cols].img.src;
+        let tmp2 = table[i + cols].type;
+        table[i + cols].img.src = table[i].img.src;
+        table[i + cols].type = table[i].type;
         table[i].img.src = tmp;
         table[i].type = tmp2;
         if (
           table[i].y == rows - 2 ||
-          (i + rRow < size && !table[i + rRow].isMoving)
+          (i + cols < size && !table[i + cols].isMoving)
         ) {
           table[i].isMoving = false;
         }
         if (!table[i].isMoving) {
           permitted = true;
         }
-        //console.log(table[i].isMoving);
         break;
-      } else if (
-        (i <= rRow * 2 && table[i + rRow].type == 1) ||
-        (i <= rRow * 2 && table[i + rRow].type == 2)
-      ) {
-        permitted = true;
+      } else if (table[i].isMoving == false && table[i].y == 1) {
+        if (!full.includes(i)) {
+          full.push(i);
+          permitted = true;
+        }
       }
     }
   }
@@ -231,25 +231,40 @@ function calculatePriorityLeft(rowNum) {
   //find left
   if (table[rowNum].x >= 0 && table[rowNum].type == 2) {
     rowsArray[curPos].leftPriority += 1;
-    if (table[rowNum].x == 0) {
+    if (
+      table[rowNum].x == 0 ||
+      (rowNum - 1 >= 0 && table[rowNum - 1].type == 1)
+    ) {
       rowsArray[curPos].leftSpace = false;
+    } else if (table[rowNum - 1].type == 2) {
+      rowsArray[curPos].leftSpace = false;
+      calculatePriorityLeft(rowNum - 1);
     } else {
       calculatePriorityLeft(rowNum - 1);
     }
+    rowsArray[curPos].visited = true;
   }
 }
+
 function calculatePriorityRight(rowNum) {
   //find right
   if (table[rowNum].x <= cols && table[rowNum].type == 2) {
     rowsArray[curPos].rightPriority += 1;
-    if (table[rowNum].x == cols - 1) {
+    if (
+      table[rowNum].x == cols - 1 ||
+      (rowNum + 1 <= cols && table[rowNum + 1].type == 1)
+    ) {
       rowsArray[curPos].rightSpace = false;
+    } else if (table[rowNum + 1].type == 2) {
+      rowsArray[curPos].rightSpace = false;
+      calculatePriorityRight(rowNum + 1);
     } else {
-      //console.log("right");
       calculatePriorityRight(rowNum + 1);
     }
+    rowsArray[curPos].visited = true;
   }
 }
+
 function calculatePriorityUp(rowNum) {
   //find up
   if (table[rowNum].y >= 0 && table[rowNum].type == 2) {
@@ -263,8 +278,8 @@ function calculatePriorityUp(rowNum) {
     } else {
       calculatePriorityUp(rowNum - cols);
     }
+    rowsArray[curPos].visited = true;
   }
-  rowsArray[curPos].visited = true;
 }
 
 function calculatePriorityDown(rowNum) {
@@ -275,13 +290,15 @@ function calculatePriorityDown(rowNum) {
     } else {
       calculatePriorityDown(rowNum + cols);
     }
+    rowsArray[curPos].visited = true;
   }
-  rowsArray[curPos].visited = true;
 }
 
+var overall = 0;
+var horizontalPriority = 0;
+var verticalPriority = 0;
+
 function resetInfo() {
-  lvl_one = true;
-  lvl_two = true;
   for (let i = 0; i < rows; i++) {
     rowsArray[i].upPriority = -1;
     rowsArray[i].downPriority = -1;
@@ -296,11 +313,10 @@ function resetInfo() {
     rowsArray[i].upIsBest = false;
     rowsArray[i].bestIs = 0;
   }
+  overall = 0;
+  horizontalPriority = 0;
+  verticalPriority = 0;
 }
-
-var overall = 0;
-var horizontalPriority = 0;
-var verticalPriority = 0;
 
 function calculateResult2() {
   for (let u = 0; u < cols; u++) {
@@ -308,16 +324,14 @@ function calculateResult2() {
       horizontalPriority =
         rowsArray[u].leftPriority + rowsArray[u].rightPriority;
       verticalPriority = rowsArray[u].upPriority + rowsArray[u].downPriority;
-      rowsArray[u].rightSpace = true;
-
       if (rowsArray[u].leftSpace == true || rowsArray[u].rightSpace == true) {
         if (horizontalPriority >= verticalPriority || !rowsArray[u].upSpace) {
           if (rowsArray[u].leftSpace) {
             rowsArray[u].leftIsBest = true;
-            rowsArray[u].bestIs = horizontalPriority;
+            rowsArray[u - 1].bestIs = horizontalPriority;
           } else {
             rowsArray[u].rightIsBest = true;
-            rowsArray[u].bestIs = horizontalPriority;
+            rowsArray[u + 1].bestIs = horizontalPriority;
           }
           if (horizontalPriority > overall) {
             overall = horizontalPriority;
@@ -349,15 +363,29 @@ function level2() {
       pos -= i;
       pos -= rows + 1;
       pos = Math.abs(pos);
-      console.log(pos);
       if (!rowsArray[pos].visited) {
         curPos = pos;
         calculatePriorityUp(i);
         calculatePriorityDown(i);
         calculatePriorityLeft(i);
         calculatePriorityRight(i);
-        console.log(i);
-        console.log(curPos);
+
+        if (rowsArray[pos].leftSpace) {
+          if (table[i].y <= rows - 2) {
+            if (table[i + -1 + cols].type == 0) {
+              rowsArray[pos].leftSpace = false;
+            }
+          }
+        }
+        if (rowsArray[pos].rightSpace) {
+          if (table[i].y <= rows - 2) {
+            if (table[i + 1 + cols].type == 0) {
+              rowsArray[pos].rightSpace = false;
+            }
+          }
+        }
+
+        console.log("----------------------------");
         console.log("PosX: " + table[i].x + " PosY: " + table[i].y);
         console.log("Visited: " + rowsArray[pos].visited);
         console.log("Up: " + rowsArray[pos].upPriority);
@@ -374,19 +402,19 @@ function level2() {
   calculateResult2();
   //do stuff
   for (let u = 0; u < cols; u++) {
-    if (
-      rowsArray[u].visited == true &&
-      overall == rowsArray[u].bestIs &&
-      overall != 0
-    ) {
+    if (overall == rowsArray[u].bestIs && overall != 0) {
       for (let i = 0; i < size; i++) {
         if (table[i].y == 1 && table[i].x == u) {
           if (table[i].type != 0) {
+            console.log("RandomMove");
             level1();
+            u = 100;
+            break;
           }
           table[i].img.src = "rem.png";
           table[i].type = 2;
           u = 100;
+          console.log("SmaaaartMove");
           break;
         }
       }
@@ -395,8 +423,8 @@ function level2() {
     if (overall == 0 && rowsArray[u].visited == true) {
       if (
         rowsArray[u].upSpace ||
-        rowsArray[u].rightSpaceSpace ||
-        rowsArray[u].leftSpaceSpace
+        rowsArray[u].rightSpace ||
+        rowsArray[u].leftSpace
       ) {
         if (rowsArray[u].upSpace) {
           table[u].img.src = "rem.png";
