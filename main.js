@@ -4,6 +4,11 @@ let difficulty = 0;
 
 const preferencias = document.getElementById('preferencias');
 const juego = document.getElementById('juego');
+const formulario = document.getElementById('formulario');
+
+formulario.addEventListener('submit', (e) => {
+  e.preventDefault();
+});
 
 const elegirPreferencias = () => {
 
