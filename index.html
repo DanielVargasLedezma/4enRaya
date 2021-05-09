@@ -5,43 +5,64 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="css/style.css" />  
-  <title>Waifus en 4: Preferencias</title>
+  <title>Waifus en 4</title>
 </head>
 <body>
-  <div class="envoltorio">
+
+
+  <div class="envoltorio" id = "preferencias">
     <h1>Digite las preferencias del juego</h1>
-    <form action="#juego.php" class="formulario">
+    <form class="formulario">
       <div class="input-fields">
         <div class="izquierda">
           <p>Dificultad</p>
-          <select name="dificultad" id="comboBox" class="comboBox">
-            <option value="1">Dificultad 1</option>
-            <option value="2">Dificultad 2</option>
+          <select name="dificultad" id="dificultad" class="comboBox">
+            <option value="0">Dificultad 1</option>
+            <option value="1">Dificultad 2</option>
           </select>
         </div>
         <div class="derecha">
           <div class="n1">
             <p>N° Filas</p>
-            <select name="dificultad" id="comboBox" class="comboBox">
-              <option value="1">7</option>
-              <option value="2">8</option>
-              <option value="3">9</option>
-              <option value="4">10</option>
+            <select name="n_row" id="n_row" class="comboBox">
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
             </select>
           </div>
           <div class="n2">
             <p>N° Columnas</p>
-            <select name="dificultad" id="comboBox" class="comboBox">
-              <option value="1">7</option>
-              <option value="2">8</option>
-              <option value="3">9</option>
-              <option value="4">10</option>
+            <select name="n_col" id="n_col" class="comboBox">
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
             </select>
           </div>
-        <button id = "Login" type="submit" class="boton" name = "login">Iniciar</button>
+        <button id = "iniciar" type="submit" class="boton" name = "iniciar">Iniciar</button>
         </div>
       </div>
     </form>
   </div>
+
+
+  <div class="juego" id = "juego">
+    <h1>Waifus en 4</h1>
+    <div class="card">
+      <div class="card_content">
+        <div class="card_front">
+          <div class="neon-wrapper">
+            <div id="waifus1" class="scene"></div>
+            <span class="gradient"></span>
+            <span class="dodge"></span>
+          </div>
+        </div>
+        <div class="card_back"></div>
+      </div>
+    </div>
+  </div>
+
 </body>
+<script src="main.js"></script>
 </html>

@@ -244,3 +244,7 @@ option{
   cursor: pointer;
   text-transform: uppercase;
 }
+
+.juego{
+  display: none;
+}

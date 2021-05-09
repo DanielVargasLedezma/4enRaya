@@ -1,6 +1,29 @@
 let permitted = true;
 let turn = true;
-let difficulty = 1;
+let difficulty = 0;
+
+const preferencias = document.getElementById('preferencias');
+const juego = document.getElementById('juego');
+
+const elegirPreferencias = () => {
+
+  const dificultad = document.getElementById('dificultad').value;
+
+  var n_col = document.getElementById('n_col').value;
+  var n_row = document.getElementById('n_row').value;
+  
+  difficulty = dificultad;
+
+  document.documentElement.style.setProperty('--var--rows', n_row);
+  document.documentElement.style.setProperty('--var--cols', n_col);
+
+  juego.style.display = "block";
+  preferencias.style.display = "none";
+}
+ 
+const botonElegir = document.getElementById('iniciar');
+
+botonElegir.addEventListener('click', elegirPreferencias);
 
 var rem = document.createElement("img");
 rem.src = "rem.png";
