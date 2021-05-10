@@ -27,7 +27,7 @@ const elegirPreferencias = () => {
   var n_col = document.getElementById("n_col").value;
   var n_row = document.getElementById("n_row").value;
 
-  difficulty = 1;
+  difficulty = dificultad;
 
   document.documentElement.style.setProperty("--var--rows", n_row);
   document.documentElement.style.setProperty("--var--cols", n_col);
