@@ -5,7 +5,6 @@ var rowsArray = [];
 var full = [];
 var rows = parseInt(getComputedStyle(root).getPropertyValue("--var--rows"));
 var cols = parseInt(getComputedStyle(root).getPropertyValue("--var--cols"));
-var win = false;
 
 let permitted = true;
 let turn = true;
@@ -25,7 +24,7 @@ const elegirPreferencias = () => {
   var n_col = document.getElementById("n_col").value;
   var n_row = document.getElementById("n_row").value;
 
-  difficulty = 1;
+  difficulty = dificultad;
 
   document.documentElement.style.setProperty("--var--rows", n_row);
   document.documentElement.style.setProperty("--var--cols", n_col);
@@ -78,8 +77,6 @@ class RowCalculationFuckit {
     var rightIsBest;
     var upIsBest;
     var bestIs;
-    //only for spying
-    var topPriority;
   }
 }
 
@@ -100,7 +97,6 @@ function init() {
     rowsArray[i].rightIsBest = false;
     rowsArray[i].upIsBest = false;
     rowsArray[i].bestIs = 0;
-    rowsArray[i].topPriority = false;
   }
 
   var counterX = 0;
@@ -172,46 +168,42 @@ function play(e) {
 }
 
 setInterval(function () {
-  if (!win) {
-    if (permitted && !turn) {
-      if (difficulty == 0) {
-        level1();
-      } else if (difficulty == 1) {
-        level2();
-      }
-      permitted = false;
-      turn = true;
+  if (permitted && !turn) {
+    if (difficulty == 0) {
+      level1();
+    } else if (difficulty == 1) {
+      level2();
     }
+    permitted = false;
+    turn = true;
+  }
 
-    for (let i = 0; i < size; i++) {
-      if (table[i].type == 1 || table[i].type == 2) {
-        if (i + cols < size && table[i + cols].type == 0) {
-          let tmp = table[i + cols].img.src;
-          let tmp2 = table[i + cols].type;
-          table[i + cols].img.src = table[i].img.src;
-          table[i + cols].type = table[i].type;
-          table[i].img.src = tmp;
-          table[i].type = tmp2;
-          if (
-            table[i].y == rows - 2 ||
-            (i + cols < size && !table[i + cols].isMoving)
-          ) {
-            table[i].isMoving = false;
-          }
-          if (!table[i].isMoving) {
-            permitted = true;
-          }
-          break;
-        } else if (table[i].isMoving == false && table[i].y == 1) {
-          if (!full.includes(i)) {
-            full.push(i);
-            permitted = true;
-          }
+  for (let i = 0; i < size; i++) {
+    if (table[i].type == 1 || table[i].type == 2) {
+      if (i + cols < size && table[i + cols].type == 0) {
+        let tmp = table[i + cols].img.src;
+        let tmp2 = table[i + cols].type;
+        table[i + cols].img.src = table[i].img.src;
+        table[i + cols].type = table[i].type;
+        table[i].img.src = tmp;
+        table[i].type = tmp2;
+        if (
+          table[i].y == rows - 2 ||
+          (i + cols < size && !table[i + cols].isMoving)
+        ) {
+          table[i].isMoving = false;
+        }
+        if (!table[i].isMoving) {
+          permitted = true;
+        }
+        break;
+      } else if (table[i].isMoving == false && table[i].y == 1) {
+        if (!full.includes(i)) {
+          full.push(i);
+          permitted = true;
         }
       }
     }
-  } else {
-    console.log("Gano");
   }
 }, 200);
 
@@ -235,59 +227,47 @@ function level1() {
 
 let curPos = 0;
 
-function calculatePriorityLeft(rowNum, in_type) {
+function calculatePriorityLeft(rowNum) {
   //find left
-  var contrary = 0;
-  if (in_type == 1) {
-    contrary = 2;
-  } else {
-    contrary = 1;
-  }
-  if (table[rowNum].x >= 0 && table[rowNum].type == in_type) {
+  if (table[rowNum].x >= 0 && table[rowNum].type == 2) {
     rowsArray[curPos].leftPriority += 1;
     if (
       table[rowNum].x == 0 ||
-      (rowNum - 1 >= 0 && table[rowNum - 1].type == contrary)
+      (rowNum - 1 >= 0 && table[rowNum - 1].type == 1)
     ) {
       rowsArray[curPos].leftSpace = false;
-    } else if (table[rowNum - 1].type == in_type) {
+    } else if (table[rowNum - 1].type == 2) {
       rowsArray[curPos].leftSpace = false;
-      calculatePriorityLeft(rowNum - 1, in_type);
+      calculatePriorityLeft(rowNum - 1);
     } else {
-      calculatePriorityLeft(rowNum - 1, in_type);
+      calculatePriorityLeft(rowNum - 1);
     }
     rowsArray[curPos].visited = true;
   }
 }
 
-function calculatePriorityRight(rowNum, in_type) {
+function calculatePriorityRight(rowNum) {
   //find right
-  var contrary = 0;
-  if (in_type == 1) {
-    contrary = 2;
-  } else {
-    contrary = 1;
-  }
-  if (table[rowNum].x <= cols && table[rowNum].type == in_type) {
+  if (table[rowNum].x <= cols && table[rowNum].type == 2) {
     rowsArray[curPos].rightPriority += 1;
     if (
       table[rowNum].x == cols - 1 ||
-      (rowNum + 1 <= cols && table[rowNum + 1].type == contrary)
+      (rowNum + 1 <= cols && table[rowNum + 1].type == 1)
     ) {
       rowsArray[curPos].rightSpace = false;
-    } else if (table[rowNum + 1].type == in_type) {
+    } else if (table[rowNum + 1].type == 2) {
       rowsArray[curPos].rightSpace = false;
-      calculatePriorityRight(rowNum + 1, in_type);
+      calculatePriorityRight(rowNum + 1);
     } else {
-      calculatePriorityRight(rowNum + 1, in_type);
+      calculatePriorityRight(rowNum + 1);
     }
     rowsArray[curPos].visited = true;
   }
 }
 
-function calculatePriorityUp(rowNum, in_type) {
+function calculatePriorityUp(rowNum) {
   //find up
-  if (table[rowNum].y >= 0 && table[rowNum].type == in_type) {
+  if (table[rowNum].y >= 0 && table[rowNum].type == 2) {
     rowsArray[curPos].upPriority += 1;
     if (
       table[rowNum].y == 0 ||
@@ -296,19 +276,19 @@ function calculatePriorityUp(rowNum, in_type) {
     ) {
       rowsArray[curPos].upSpace = false;
     } else {
-      calculatePriorityUp(rowNum - cols, in_type);
+      calculatePriorityUp(rowNum - cols);
     }
     rowsArray[curPos].visited = true;
   }
 }
 
-function calculatePriorityDown(rowNum, in_type) {
+function calculatePriorityDown(rowNum) {
   //find down
-  if (table[rowNum].y < rows && table[rowNum].type == in_type) {
+  if (table[rowNum].y < rows && table[rowNum].type == 2) {
     rowsArray[curPos].downPriority += 1;
     if (table[rowNum].y == rows - 1) {
     } else {
-      calculatePriorityDown(rowNum + cols, in_type);
+      calculatePriorityDown(rowNum + cols);
     }
     rowsArray[curPos].visited = true;
   }
@@ -319,7 +299,7 @@ var horizontalPriority = 0;
 var verticalPriority = 0;
 
 function resetInfo() {
-  for (let i = 0; i < cols; i++) {
+  for (let i = 0; i < rows; i++) {
     rowsArray[i].upPriority = -1;
     rowsArray[i].downPriority = -1;
     rowsArray[i].leftPriority = -1;
@@ -332,7 +312,6 @@ function resetInfo() {
     rowsArray[i].rightIsBest = false;
     rowsArray[i].upIsBest = false;
     rowsArray[i].bestIs = 0;
-    rowsArray[i].topPriority = false;
   }
   overall = 0;
   horizontalPriority = 0;
@@ -342,21 +321,11 @@ function resetInfo() {
 function calculateResult2() {
   for (let u = 0; u < cols; u++) {
     if (rowsArray[u].visited == true) {
-      if (
-        horizontalPriority <
-        rowsArray[u].leftPriority + rowsArray[u].rightPriority
-      ) {
-        horizontalPriority =
-          rowsArray[u].leftPriority + rowsArray[u].rightPriority;
-      }
-      if (
-        verticalPriority <
-        rowsArray[u].upPriority + rowsArray[u].downPriority
-      ) {
-        verticalPriority = rowsArray[u].upPriority + rowsArray[u].downPriority;
-      }
+      horizontalPriority =
+        rowsArray[u].leftPriority + rowsArray[u].rightPriority;
+      verticalPriority = rowsArray[u].upPriority + rowsArray[u].downPriority;
       if (rowsArray[u].leftSpace == true || rowsArray[u].rightSpace == true) {
-        if (horizontalPriority > verticalPriority) {
+        if (horizontalPriority >= verticalPriority || !rowsArray[u].upSpace) {
           if (rowsArray[u].leftSpace) {
             rowsArray[u].leftIsBest = true;
             rowsArray[u - 1].bestIs = horizontalPriority;
@@ -370,12 +339,16 @@ function calculateResult2() {
         }
       }
       if (rowsArray[u].upSpace == true) {
-        if (verticalPriority > horizontalPriority) {
+        if (
+          verticalPriority >= horizontalPriority ||
+          (!rowsArray[u].leftSpace && !rowsArray[u].rightSpace)
+        ) {
           rowsArray[u].upIsBest = true;
           rowsArray[u].bestIs = verticalPriority;
           if (verticalPriority > overall) {
             overall = verticalPriority;
           }
+          //console.log("vert is: " + verticalPriority);
         }
       }
     }
@@ -383,34 +356,19 @@ function calculateResult2() {
 }
 
 function level2() {
-  isFuckingValid = true;
+  //spy
   for (let i = 0; i < size; i++) {
-    //spy
-    if (table[i].type == 1) {
-      var pos = (table[i].y + 1) * cols;
+    if (table[i].type == 2) {
+      var pos = (table[i].y + 1) * (rows + 1);
       pos -= i;
-      pos = Math.abs(pos);
-      pos -= cols;
+      pos -= rows + 1;
       pos = Math.abs(pos);
       if (!rowsArray[pos].visited) {
         curPos = pos;
-        calculatePriorityUp(i, 1);
-        calculatePriorityDown(i, 1);
-        calculatePriorityLeft(i, 1);
-        calculatePriorityRight(i, 1);
-
-        if (rowsArray[pos].rightPriority + rowsArray[pos].leftPriority >= 3) {
-          console.log("Juador ");
-          win = true;
-          return;
-        } else if (
-          rowsArray[pos].upPriority + rowsArray[pos].downPriority >=
-          3
-        ) {
-          console.log("Juador ");
-          win = true;
-          return;
-        }
+        calculatePriorityUp(i);
+        calculatePriorityDown(i);
+        calculatePriorityLeft(i);
+        calculatePriorityRight(i);
 
         if (rowsArray[pos].leftSpace) {
           if (table[i].y <= rows - 2) {
@@ -426,14 +384,7 @@ function level2() {
             }
           }
         }
-        if (!rowsArray[pos].rightSpace && !rowsArray[pos].leftSpace) {
-          rowsArray[pos].rightPriority = 0;
-          rowsArray[pos].leftPriority = 0;
-        }
-        if (!rowsArray[pos].upSpace) {
-          rowsArray[pos].upPriority = 0;
-          rowsArray[pos].downPriority = 0;
-        }
+
         console.log("----------------------------");
         console.log("PosX: " + table[i].x + " PosY: " + table[i].y);
         console.log("Visited: " + rowsArray[pos].visited);
@@ -447,107 +398,6 @@ function level2() {
         console.log("----------------------------");
       }
     }
-  }
-
-  calculateResult2();
-  console.log("Horizontal : " + horizontalPriority);
-  console.log("VerticalI : " + verticalPriority);
-
-  if (horizontalPriority > verticalPriority) {
-    console.log("HorizontalIsFUckingRight");
-  } else if (horizontalPriority < verticalPriority) {
-    console.log("VerticalIsFUckingRight");
-  }
-
-  for (let x = 0; x < cols; x++) {
-    if (rowsArray[x].visited) {
-      if (
-        horizontalPriority ==
-        rowsArray[x].rightPriority + rowsArray[x].leftPriority
-      ) {
-        if (rowsArray[x].rightSpace == true && horizontalPriority >= 2) {
-          console.log("Right: we are fucked button:" + (x + 1));
-          table[cols + (x + 1)].img.src = "rem.png";
-          table[cols + (x + 1)].type = 2;
-          console.log("Omnipotente");
-          resetInfo();
-          isFuckingValid = false;
-        }
-        if (rowsArray[x].leftSpace == true && horizontalPriority >= 2) {
-          console.log("Left: we are fucked button:" + (x - 1));
-          table[cols + (x - 1)].img.src = "rem.png";
-          table[cols + (x - 1)].type = 2;
-          console.log("Omnipotente");
-          resetInfo();
-          isFuckingValid = false;
-        }
-      }
-
-      if (
-        rowsArray[x].upSpace == true &&
-        verticalPriority >= 2 &&
-        verticalPriority == rowsArray[x].upPriority + rowsArray[x].downPriority
-      ) {
-        console.log("Up: we are fucked button:" + x);
-        table[cols + x].img.src = "rem.png";
-        table[cols + x].type = 2;
-        console.log("Omnipotente");
-        resetInfo();
-        isFuckingValid = false;
-      }
-    }
-  }
-
-  resetInfo();
-
-  for (let i = 0; i < size; i++) {
-    if (table[i].type == 2) {
-      //var pos = (table[i].y + 1) * (rows + 1);
-      var pos = (table[i].y + 1) * cols;
-      pos -= i;
-      pos = Math.abs(pos);
-      pos -= cols;
-      pos = Math.abs(pos);
-      if (!rowsArray[pos].visited) {
-        curPos = pos;
-        calculatePriorityUp(i, 2);
-        calculatePriorityDown(i, 2);
-        calculatePriorityLeft(i, 2);
-        calculatePriorityRight(i, 2);
-
-        if (rowsArray[pos].rightPriority + rowsArray[pos].leftPriority >= 3) {
-          console.log("Maquina ");
-          win = true;
-          return;
-        } else if (
-          rowsArray[pos].upPriority + rowsArray[pos].downPriority >=
-          3
-        ) {
-          console.log("Maquina ");
-          win = true;
-          return;
-        }
-
-        if (rowsArray[pos].leftSpace) {
-          if (table[i].y <= rows - 2) {
-            if (table[i + -1 + cols].type == 0) {
-              rowsArray[pos].leftSpace = false;
-            }
-          }
-        }
-        if (rowsArray[pos].rightSpace) {
-          if (table[i].y <= rows - 2) {
-            if (table[i + 1 + cols].type == 0) {
-              rowsArray[pos].rightSpace = false;
-            }
-          }
-        }
-      }
-    }
-  }
-  if (!isFuckingValid) {
-    resetInfo();
-    return;
   }
   calculateResult2();
   //do stuff

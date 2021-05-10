@@ -138,7 +138,7 @@ body {
   height: 100%;
 }
 
-.envoltorio {
+.envoltorio{
   margin: auto;
   margin-top: 19rem;
   width: 100%;
@@ -147,11 +147,11 @@ body {
   background: rgba(39, 39, 36, 0.8);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 15rem rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15rem rgba(0,0,0,0.3);
   color: #eaf0f3;
 }
 
-.envoltorio h1 {
+.envoltorio h1{
   color: #eaf0f3;
   margin: auto;
   font-size: 3rem;
@@ -159,21 +159,21 @@ body {
   margin-bottom: 2rem;
 }
 
-.formulario {
+.formulario{
   display: flex;
 }
 
-.formulario > h1 {
+.formulario>h1{
   text-align: center;
   margin: auto;
 }
 
-.input-fields {
+.input-fields{
   margin: auto;
   width: 100%;
 }
 
-.comboBox {
+.comboBox{
   margin: 10px 0;
   background: transparent;
   border: 0px;
@@ -183,48 +183,48 @@ body {
   width: 100%;
 }
 
-option {
+option{
   background-color: #c78c54;
 }
 
-.izquierda {
+.izquierda{
   width: 50%;
   margin-bottom: 1.5rem;
-  float: left;
+  float:left;
 }
 
-.izquierda .comboBox {
+.izquierda .comboBox{
   width: 95%;
   display: flex;
-  float: left;
+  float:left;
 }
 
-.izquierda .input {
+.izquierda .input{
   width: 95%;
 }
 
-.derecha {
+.derecha{
   width: 50%;
   margin-bottom: 1.5rem;
   float: right;
 }
 
-.derecha .comboBox {
+.derecha .comboBox{
   display: flex;
-  float: right;
+  float:right;
 }
 
-.n1 {
+.n1{
   float: right;
   width: 50%;
   margin-bottom: 1.5rem;
 }
 
-.n1 .comboBox {
+.n1 .comboBox{
   width: 95%;
 }
 
-.n2 {
+.n2{
   float: left;
   width: 50%;
   margin-bottom: 1.5rem;
@@ -245,6 +245,6 @@ option {
   text-transform: uppercase;
 }
 
-.juego {
+.juego{
   display: none;
 }
