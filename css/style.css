@@ -137,3 +137,114 @@ body {
   transform: rotateY(0.5turn);
   height: 100%;
 }
+
+.envoltorio {
+  margin: auto;
+  margin-top: 19rem;
+  width: 100%;
+  max-width: 35rem;
+  padding: 3rem;
+  background: rgba(39, 39, 36, 0.8);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15rem rgba(0, 0, 0, 0.3);
+  color: #eaf0f3;
+}
+
+.envoltorio h1 {
+  color: #eaf0f3;
+  margin: auto;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.formulario {
+  display: flex;
+}
+
+.formulario > h1 {
+  text-align: center;
+  margin: auto;
+}
+
+.input-fields {
+  margin: auto;
+  width: 100%;
+}
+
+.comboBox {
+  margin: 10px 0;
+  background: transparent;
+  border: 0px;
+  border-bottom: 2px solid #ce7420;
+  padding: 10px;
+  color: #f8f8f8;
+  width: 100%;
+}
+
+option {
+  background-color: #c78c54;
+}
+
+.izquierda {
+  width: 50%;
+  margin-bottom: 1.5rem;
+  float: left;
+}
+
+.izquierda .comboBox {
+  width: 95%;
+  display: flex;
+  float: left;
+}
+
+.izquierda .input {
+  width: 95%;
+}
+
+.derecha {
+  width: 50%;
+  margin-bottom: 1.5rem;
+  float: right;
+}
+
+.derecha .comboBox {
+  display: flex;
+  float: right;
+}
+
+.n1 {
+  float: right;
+  width: 50%;
+  margin-bottom: 1.5rem;
+}
+
+.n1 .comboBox {
+  width: 95%;
+}
+
+.n2 {
+  float: left;
+  width: 50%;
+  margin-bottom: 1.5rem;
+}
+
+.boton {
+  margin: auto;
+  display: block;
+  margin-top: 1.75rem;
+  margin-right: 0rem;
+  background: #ce7420;
+  text-align: center;
+  padding: 1rem;
+  width: 10rem;
+  border-radius: 0.5rem;
+  color: #f8f8f8;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.juego {
+  display: none;
+}
