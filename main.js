@@ -405,12 +405,14 @@ function level2() {
         if (rowsArray[pos].rightPriority + rowsArray[pos].leftPriority >= 3) {
           console.log("Juador ");
           win = true;
+          alert('EL JUGADOR GANA');
           return;
         } else if (
           rowsArray[pos].upPriority + rowsArray[pos].downPriority >=
           3
         ) {
           console.log("Juador ");
+          alert('EL JUGADOR GANA');
           win = true;
           return;
         }
@@ -521,6 +523,7 @@ function level2() {
         if (rowsArray[pos].rightPriority + rowsArray[pos].leftPriority >= 3) {
           console.log("Maquina ");
           win = true;
+          alert('EL JUGADOR GANA');
           return;
         } else if (
           rowsArray[pos].upPriority + rowsArray[pos].downPriority >=
@@ -528,6 +531,7 @@ function level2() {
         ) {
           console.log("Maquina ");
           win = true;
+          alert('EL JUGADOR GANA');
           return;
         }
 

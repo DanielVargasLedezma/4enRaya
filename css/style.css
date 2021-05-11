@@ -248,3 +248,9 @@ option{
 .juego{
   display: none;
 }
+
+.juego >h1{
+  color: aliceblue;
+  text-align: center;
+  text-shadow: -0.1rem 0 black, 0 0.1rem black, 0.1rem 0 black, 0 -0.1rem black;
+}
